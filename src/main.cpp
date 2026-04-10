@@ -3,22 +3,57 @@
 #include "DataManage.hpp"
 #include "TimeMeasure.hpp"
 
-int main(){
-    std::unordered_map<std::string, std::string> titles = loadTitlesMap("title.basics.tsv/datab.tsv");
-    std::vector<Record> r = mergeRatingToTitle("title.ratings.tsv/datar.tsv", titles);
-    
-    titles.clear();
+int main() {
+    std::unordered_map<std::string, std::string> titleMap = loadTitlesMap("datab.tsv");
+    std::vector<Record> allMovies = mergeRatingToTitle("datar.tsv", titleMap);
+    titleMap.clear();
 
-    removeEmptyRating(r);
+    // czyszczenie
+    removeEmptyRating(allMovies);
 
-    double t1 = measureTime(r, quickSort);
-    double t2 = measureTime(r, mergeSort);
-    double t3 = measureTime(r, bucketSort);
-    
-    std::cout<<"QS: "<<t1<<std::endl;
-    std::cout<<"MS: "<<t2<<std::endl;
-    std::cout<<"BS: "<<t3<<std::endl;
-    //saveFile(r, "sorted.tsv");
-    
+    // rozmiary do testow
+    std::vector<size_t> testSizes = {10000, 100000, 500000, 1000000, allMovies.size()};
+
+    for(size_t limit : testSizes){
+        // zabezpieczenie - danych jest mniej niz podany limit
+        size_t hardLimit = std::min(limit, allMovies.size());
+
+        std::vector<Record> probka(allMovies.begin(), allMovies.begin() + hardLimit);
+
+        double timeQS = measureTime(probka, quickSort);
+        double timeMS = measureTime(probka, mergeSort);
+        double timeBS = measureTime(probka, bucketSort);
+
+        std::cout<<"Quick Sort:  "<<timeQS<<" ms" <<std::endl;
+        std::cout<<"Merge Sort:  "<<timeMS<<" ms" <<std::endl;
+        std::cout<<"Bucket Sort: "<<timeBS<<" ms" <<std::endl;
+
+        // bucket sort jest najszybszy wiec uzywamy go do liczenia sredniej
+        bucketSort(probka); 
+
+        // mediana
+        double mediana = 0.0;
+        if(hardLimit % 2 == 0){
+            mediana = (probka[hardLimit / 2 - 1].rating + probka[hardLimit / 2].rating) / 2.0;
+        }
+        else{
+            mediana = probka[hardLimit / 2].rating;
+        }
+
+        // średnia
+        double suma = 0.0;
+        for(const auto& rec : probka){
+            suma += rec.rating;
+        }
+        double srednia = suma / hardLimit;
+
+        std::cout<<"Średnia: "<<srednia<<std::endl;
+        std::cout<<"Mediana: "<<mediana<<std::endl;
+
+        // zapis do pliku
+        if (limit == allMovies.size()) {
+            saveFile(probka, "sorted.tsv");
+        }
+    }
     return 0;
 }

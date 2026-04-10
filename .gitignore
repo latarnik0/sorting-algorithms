@@ -1,14 +1,12 @@
+.build/
 .env
-
 .DS_Store
 .AppleDouble
 .LSOverride
-
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
 .vscode/
 .idea/
 *.suo
