@@ -1,6 +1,7 @@
 #pragma once
 #include "Record.hpp"
 #include "Sorting.hpp"
+#include <chrono>
 
 template <typename SortFunction>
 double measureTime(std::vector<Record> data, SortFunction sortFunc) {
