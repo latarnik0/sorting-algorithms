@@ -98,7 +98,7 @@ void saveFile(const std::vector<Record>& records, const std::string& filename) {
     std::ofstream outFile(filename);
     
     if (!outFile.is_open()) {
-        std::cerr << "Blad: Nie mozna utworzyc pliku " << filename << "!" << std::endl;
+        std::cerr<<"Nie mozna utworzyc pliku "<< std::endl;
         return;
     }
 

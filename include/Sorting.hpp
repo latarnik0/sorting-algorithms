@@ -94,18 +94,6 @@ void mergeSort(std::vector<Record>& arr) {
 }
 
 // BUCKET SORT
-void insertionSort(std::vector<float>& bucket) {
-    for (int i = 1; i < bucket.size(); ++i) {
-        float key = bucket[i];
-        int j = i - 1;
-        while (j >= 0 && bucket[j] > key) {
-            bucket[j + 1] = bucket[j];
-            j--;
-        }
-        bucket[j + 1] = key;
-    }
-}
-
 void bucketSort(std::vector<Record>& arr) {
     if (arr.empty()) return;
     std::vector<std::vector<Record>> buckets(101);
