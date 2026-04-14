@@ -1,3 +1,0 @@
-C:/Users/Kuba/Desktop/piaa1/sorting-algorithms/build/CMakeFiles/sort.dir
-C:/Users/Kuba/Desktop/piaa1/sorting-algorithms/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/Kuba/Desktop/piaa1/sorting-algorithms/build/CMakeFiles/ZERO_CHECK.dir
