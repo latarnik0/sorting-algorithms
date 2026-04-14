@@ -5,7 +5,13 @@
 
 int main() {
     std::unordered_map<std::string, std::string> titleMap = loadTitlesMap("datab.tsv");
+
+    auto startSearch = std::chrono::high_resolution_clock::now();
     std::vector<Record> allMovies = mergeRatingToTitle("datar.tsv", titleMap);
+    auto endSearch = std::chrono::high_resolution_clock::now();
+    
+    std::chrono::duration<double, std::milli> searchTime = endSearch - startSearch;
+    std::cout<<"Czas przeszukiwania mapy: "<<searchTime.count()<<" ms\n";
     titleMap.clear();
 
     // czyszczenie
