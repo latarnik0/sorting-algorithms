@@ -15,7 +15,7 @@ int main() {
     std::vector<size_t> testSizes = {10000, 100000, 500000, 1000000, allMovies.size()};
 
     for(size_t limit : testSizes){
-        // zabezpieczenie - danych jest mniej niz podany limit
+        // jesli danych jest mniej niz podany limit
         size_t hardLimit = std::min(limit, allMovies.size());
 
         std::vector<Record> probka(allMovies.begin(), allMovies.begin() + hardLimit);
@@ -28,7 +28,7 @@ int main() {
         std::cout<<"Merge Sort:  "<<timeMS<<" ms" <<std::endl;
         std::cout<<"Bucket Sort: "<<timeBS<<" ms" <<std::endl;
 
-        // bucket sort jest najszybszy wiec uzywamy go do liczenia sredniej
+        // sortujemy
         bucketSort(probka); 
 
         // mediana
@@ -47,7 +47,7 @@ int main() {
         }
         double srednia = suma / hardLimit;
 
-        std::cout<<"Średnia: "<<srednia<<std::endl;
+        std::cout<<"Srednia: "<<srednia<<std::endl;
         std::cout<<"Mediana: "<<mediana<<std::endl;
 
         // zapis do pliku
