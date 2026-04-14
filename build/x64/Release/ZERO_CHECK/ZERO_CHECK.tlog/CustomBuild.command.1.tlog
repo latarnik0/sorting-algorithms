@@ -1,0 +1,10 @@
+^C:\USERS\KUBA\DESKTOP\PIAA1\SORTING-ALGORITHMS\BUILD\CMAKEFILES\43CB28652BAA3752E521B87EACC3B141\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Kuba/Desktop/piaa1/sorting-algorithms -BC:/Users/Kuba/Desktop/piaa1/sorting-algorithms/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Kuba/Desktop/piaa1/sorting-algorithms/build/SortingAlgorithms.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

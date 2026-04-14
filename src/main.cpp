@@ -15,10 +15,7 @@ int main() {
     std::vector<size_t> testSizes = {10000, 100000, 500000, 1000000, allMovies.size()};
 
     for(size_t limit : testSizes){
-        // jesli danych jest mniej niz podany limit
-        size_t hardLimit = std::min(limit, allMovies.size());
-
-        std::vector<Record> probka(allMovies.begin(), allMovies.begin() + hardLimit);
+        std::vector<Record> probka(allMovies.begin(), allMovies.begin() + limit);
 
         double timeQS = measureTime(probka, quickSort);
         double timeMS = measureTime(probka, mergeSort);
@@ -33,11 +30,11 @@ int main() {
 
         // mediana
         double mediana = 0.0;
-        if(hardLimit % 2 == 0){
-            mediana = (probka[hardLimit / 2 - 1].rating + probka[hardLimit / 2].rating) / 2.0;
+        if(limit % 2 == 0){
+            mediana = (probka[limit / 2 - 1].rating + probka[limit / 2].rating) / 2.0;
         }
         else{
-            mediana = probka[hardLimit / 2].rating;
+            mediana = probka[limit / 2].rating;
         }
 
         // średnia
@@ -45,13 +42,13 @@ int main() {
         for(const auto& rec : probka){
             suma += rec.rating;
         }
-        double srednia = suma / hardLimit;
+        double srednia = suma / limit;
 
         std::cout<<"Srednia: "<<srednia<<std::endl;
         std::cout<<"Mediana: "<<mediana<<std::endl;
 
         // zapis do pliku
-        if (limit == allMovies.size()) {
+        if(limit == allMovies.size()){
             saveFile(probka, "sorted.tsv");
         }
     }

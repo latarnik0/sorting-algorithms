@@ -44,15 +44,15 @@ void merge(std::vector<Record>& arr, int left, int mid, int right){
     int n2 = right - mid;
     std::vector<Record> L(n1), R(n2);
 
-    for (int i = 0; i < n1; i++)
+    for(int i = 0; i < n1; i++)
         L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
+    for(int j = 0; j < n2; j++)
         R[j] = arr[mid + 1 + j];
 
     int i = 0, j = 0;
     int k = left;
 
-    while (i < n1 && j < n2) {
+    while(i < n1 && j < n2){
         if (L[i].rating >= R[j].rating) {
             arr[k] = L[i];
             i++;
@@ -64,12 +64,12 @@ void merge(std::vector<Record>& arr, int left, int mid, int right){
         k++;
     }
 
-    while (i < n1) {
+    while(i < n1){
         arr[k] = L[i];
         i++;
         k++;
     }
-    while (j < n2) {
+    while(j < n2){
         arr[k] = R[j];
         j++;
         k++;
@@ -87,18 +87,18 @@ void mergeSortRecursive(std::vector<Record>& arr, int left, int right){
 }
 
 // wrapper
-void mergeSort(std::vector<Record>& arr) {
-    if (!arr.empty()) {
+void mergeSort(std::vector<Record>& arr){
+    if(!arr.empty()){
         mergeSortRecursive(arr, 0, arr.size() - 1);
     }
 }
 
 // BUCKET SORT
-void bucketSort(std::vector<Record>& arr) {
+void bucketSort(std::vector<Record>& arr){
     if (arr.empty()) return;
     std::vector<std::vector<Record>> buckets(101);
 
-    for (const auto& rec : arr){
+    for(const auto& rec : arr){
         int index = std::round(rec.rating * 10.0);
         if (index < 0) index = 0;
         if (index > 100) index = 100;
@@ -108,7 +108,7 @@ void bucketSort(std::vector<Record>& arr) {
 
     int currentIndex = 0;
     
-    for (int i = 100; i >= 0; i--) {
+    for(int i = 100; i >= 0; i--){
         for (const auto& rec : buckets[i]) {
             arr[currentIndex] = rec;
             currentIndex++;

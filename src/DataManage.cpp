@@ -1,26 +1,26 @@
 #include "Record.hpp"
 #include "DataManage.hpp"
 
-std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& filename) {
+std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& filename){
     std::unordered_map<std::string, std::string> titleMap;
     std::ifstream file(filename);
     std::string line;
 
-    if (!file.is_open()) {
+    if(!file.is_open()){
         std::cerr << "Blad otwarcia pliku " << filename << std::endl;
         return titleMap;
     }
 
     std::getline(file, line);
 
-    while (std::getline(file, line)) {
+    while(std::getline(file, line)){
         if (line.empty()) continue;
         size_t tab1 = line.find('\t');
-        if (tab1 != std::string::npos) {
+        if(tab1 != std::string::npos){
             std::string tconst = line.substr(0, tab1);
 
             size_t tab2 = line.find('\t', tab1 + 1);
-            if (tab2 != std::string::npos) {
+            if(tab2 != std::string::npos){
                 size_t tab3 = line.find('\t', tab2 + 1);
                 
                 std::string title = line.substr(tab2 + 1, tab3 - tab2 - 1);
@@ -34,18 +34,18 @@ std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& fi
 
 
 std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, 
-                                           const std::unordered_map<std::string, std::string>& titleMap) {
+                                           const std::unordered_map<std::string, std::string>& titleMap){
     std::vector<Record> records;
     std::ifstream file(ratingsFilename);
     std::string line;
 
-    if (!file.is_open()) {
+    if(!file.is_open()){
         std::cerr << "Blad otwarcia pliku " << ratingsFilename << std::endl;
         return records;
     }
     std::getline(file, line);
 
-    while (std::getline(file, line)) {
+    while(std::getline(file, line)){
         if (line.empty()) continue;
         size_t tabPos = line.find('\t');
         if (tabPos != std::string::npos) {
@@ -62,10 +62,11 @@ std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename,
                 rec.title = "Brak tytułu"; 
             }
 
-            if (ratingStr.empty() || ratingStr == "\\N") {
+            if(ratingStr.empty() || ratingStr == "\\N"){
                 rec.rating = -1.0; 
-            } else {
-                try {
+            }
+            else{
+                try{
                     rec.rating = std::stod(ratingStr);
                 } catch (...) {
                     rec.rating = -1.0;
@@ -88,23 +89,22 @@ void removeEmptyRating(std::vector<Record>& records){
 }
 
 
-void saveFile(const std::vector<Record>& records, const std::string& filename) {
+void saveFile(const std::vector<Record>& records, const std::string& filename){
     std::multimap<double, std::string, std::greater<double>> tree;
 
-    for (const auto& rec : records) {
+    for(const auto& rec : records){
         tree.insert({rec.rating, rec.title});
     }
 
     std::ofstream outFile(filename);
     
-    if (!outFile.is_open()) {
+    if(!outFile.is_open()){
         std::cerr<<"Nie mozna utworzyc pliku "<< std::endl;
         return;
     }
 
-    for (const auto& node : tree) {
+    for(const auto& node : tree){
         outFile << node.first << "\t" << node.second << "\n";
     }
-
     outFile.close();
 }
