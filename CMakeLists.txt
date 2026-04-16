@@ -5,12 +5,6 @@ project(SortingAlgorithms CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if(MSVC)
-    add_compile_options(/O2)
-else()
-    add_compile_options(-O3)
-endif()
-
 set(SOURCES src/main.cpp src/DataManage.cpp)
 
 add_executable(sort ${SOURCES})
