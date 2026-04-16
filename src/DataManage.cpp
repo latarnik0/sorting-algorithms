@@ -1,14 +1,15 @@
-#include "Record.hpp"
 #include "DataManage.hpp"
+#include "Record.hpp"
+#include "Tree.hpp"
 
-std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& filename){
-    std::unordered_map<std::string, std::string> titleMap;
+AVLTree<std::string, std::string> loadTitles(const std::string& filename){
+    AVLTree<std::string, std::string> titleTree;
     std::ifstream file(filename);
     std::string line;
 
     if(!file.is_open()){
         std::cerr << "Blad otwarcia pliku " << filename << std::endl;
-        return titleMap;
+        return titleTree;
     }
 
     std::getline(file, line);
@@ -24,17 +25,16 @@ std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& fi
                 size_t tab3 = line.find('\t', tab2 + 1);
                 
                 std::string title = line.substr(tab2 + 1, tab3 - tab2 - 1);
-                titleMap[tconst] = title;
+                titleTree.insert(tconst, title);
             }
         }
     }
-    return titleMap;
+    return titleTree;
 }
 
 
 
-std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, 
-                                           const std::unordered_map<std::string, std::string>& titleMap){
+std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, const AVLTree<std::string, std::string>& titleTree){
     std::vector<Record> records;
     std::ifstream file(ratingsFilename);
     std::string line;
@@ -55,10 +55,11 @@ std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename,
             std::string ratingStr = line.substr(tabPos + 1, tab2Pos - tabPos - 1);
 
             Record rec;
-            auto it = titleMap.find(tconst);
-            if (it != titleMap.end()) {
-                rec.title = it->second; 
-            } else {
+            std::string* foundTitle = titleTree.search(tconst); 
+            if (foundTitle != nullptr) {
+                rec.title = *foundTitle; 
+            } 
+            else{
                 rec.title = "Brak tytułu"; 
             }
 

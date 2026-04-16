@@ -1,18 +1,18 @@
 #include "Record.hpp"
+#include "Tree.hpp"
 #include "Sorting.hpp"
 #include "DataManage.hpp"
 #include "TimeMeasure.hpp"
 
 int main() {
-    std::unordered_map<std::string, std::string> titleMap = loadTitlesMap("datab.tsv");
+    AVLTree<std::string, std::string> titleTree = loadTitles("datab.tsv");
 
     auto startSearch = std::chrono::high_resolution_clock::now();
-    std::vector<Record> allMovies = mergeRatingToTitle("datar.tsv", titleMap);
+    std::vector<Record> allMovies = mergeRatingToTitle("datar.tsv", titleTree);
     auto endSearch = std::chrono::high_resolution_clock::now();
     
     std::chrono::duration<double, std::milli> searchTime = endSearch - startSearch;
-    std::cout<<"Czas przeszukiwania mapy: "<<searchTime.count()<<" ms\n";
-    titleMap.clear();
+    std::cout<<"Czas przeszukiwania drzewa: "<<searchTime.count()<<" ms\n";
 
     // czyszczenie
     removeEmptyRating(allMovies);
@@ -55,7 +55,12 @@ int main() {
 
         // zapis do pliku
         if(limit == allMovies.size()){
-            saveFile(probka, "sorted.tsv");
+            AVLTree<double, std::string> finalTree; 
+
+            for(const auto& rec : probka){
+                finalTree.insert(rec.rating, rec.title); 
+            }
+            finalTree.saveToFile("sorted.tsv");
         }
     }
     return 0;

@@ -7,8 +7,8 @@
 #include <map>
 #include <iostream>
 #include <algorithm>
+#include "Tree.hpp"
 
-std::unordered_map<std::string, std::string> loadTitlesMap(const std::string& filename);
-std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, const std::unordered_map<std::string, std::string>& titleMap);
+AVLTree<std::string, std::string> loadTitles(const std::string& filename);
+std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, const AVLTree<std::string, std::string>& titleTree);
 void removeEmptyRating(std::vector<Record>& records);
-void saveFile(const std::vector<Record>& records, const std::string& filename);
