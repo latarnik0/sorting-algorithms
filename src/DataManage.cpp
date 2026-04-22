@@ -2,82 +2,46 @@
 #include "Record.hpp"
 #include "Tree.hpp"
 
-AVLTree<std::string, std::string> loadTitles(const std::string& filename){
-    AVLTree<std::string, std::string> titleTree;
+AVLTree<std::string, std::string> loadTitles(const std::string& filename) {
+    AVLTree<std::string, std::string> tree;
     std::ifstream file(filename);
     std::string line;
-
-    if(!file.is_open()){
-        std::cerr << "Blad otwarcia pliku " << filename << std::endl;
-        return titleTree;
+    
+    std::getline(file, line); 
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string tconst, tempType, title;
+        std::getline(ss, tconst, '\t');
+        std::getline(ss, tempType, '\t');
+        std::getline(ss, title, '\t');
+        
+        tree.insert(tconst, title);
     }
-
-    std::getline(file, line);
-
-    while(std::getline(file, line)){
-        if (line.empty()) continue;
-        size_t tab1 = line.find('\t');
-        if(tab1 != std::string::npos){
-            std::string tconst = line.substr(0, tab1);
-
-            size_t tab2 = line.find('\t', tab1 + 1);
-            if(tab2 != std::string::npos){
-                size_t tab3 = line.find('\t', tab2 + 1);
-                
-                std::string title = line.substr(tab2 + 1, tab3 - tab2 - 1);
-                titleTree.insert(tconst, title);
-            }
-        }
-    }
-    return titleTree;
+    return tree;
 }
 
 
-
-std::vector<Record> mergeRatingToTitle(const std::string& ratingsFilename, const AVLTree<std::string, std::string>& titleTree){
-    std::vector<Record> records;
-    std::ifstream file(ratingsFilename);
+std::vector<Record> loadRatings(const std::string& filename){
+    std::vector<Record> ratings;
+    std::ifstream file(filename);
     std::string line;
 
-    if(!file.is_open()){
-        std::cerr << "Blad otwarcia pliku " << ratingsFilename << std::endl;
-        return records;
-    }
-    std::getline(file, line);
+    std::getline(file, line); 
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string tconst, ratingStr;
+        
+        std::getline(ss, tconst, '\t');
+        std::getline(ss, ratingStr, '\t');
 
-    while(std::getline(file, line)){
-        if (line.empty()) continue;
-        size_t tabPos = line.find('\t');
-        if (tabPos != std::string::npos) {
-            std::string tconst = line.substr(0, tabPos);
-            
-            size_t tab2Pos = line.find('\t', tabPos + 1);
-            std::string ratingStr = line.substr(tabPos + 1, tab2Pos - tabPos - 1);
-
+        try {
             Record rec;
-            std::string* foundTitle = titleTree.search(tconst); 
-            if (foundTitle != nullptr) {
-                rec.title = *foundTitle; 
-            } 
-            else{
-                rec.title = "Brak tytułu"; 
-            }
-
-            if(ratingStr.empty() || ratingStr == "\\N"){
-                rec.rating = -1.0; 
-            }
-            else{
-                try{
-                    rec.rating = std::stod(ratingStr);
-                } catch (...) {
-                    rec.rating = -1.0;
-                }
-            }
-
-            records.push_back(rec);
-        }
+            rec.id = tconst;
+            rec.rating = std::stod(ratingStr);
+            ratings.push_back(rec);
+        } catch (...) { continue; } 
     }
-    return records;
+    return ratings;
 }
 
 
@@ -90,22 +54,18 @@ void removeEmptyRating(std::vector<Record>& records){
 }
 
 
-void saveFile(const std::vector<Record>& records, const std::string& filename){
-    std::multimap<double, std::string, std::greater<double>> tree;
-
-    for(const auto& rec : records){
-        tree.insert({rec.rating, rec.title});
-    }
-
+void saveSortedData(const std::string& filename, const std::vector<Record>& sortedRatings, const AVLTree<std::string, std::string>& titleTree){
     std::ofstream outFile(filename);
-    
+
     if(!outFile.is_open()){
-        std::cerr<<"Nie mozna utworzyc pliku "<< std::endl;
+        std::cerr << "Blad: Nie udalo sie otworzyc pliku " << filename << " do zapisu!\n";
         return;
     }
 
-    for(const auto& node : tree){
-        outFile << node.first << "\t" << node.second << "\n";
+    for (const auto& rec : sortedRatings) {
+        std::string* titlePtr = titleTree.search(rec.id);
+        std::string title = (titlePtr != nullptr) ? *titlePtr : "Brak tytulu";
+        outFile << rec.id << "\t" << rec.rating << "\t" << title << "\n";
     }
     outFile.close();
 }

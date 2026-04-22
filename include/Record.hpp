@@ -3,5 +3,5 @@
 
 struct Record{
     double rating;
-    std::string title;
+    std::string id;
 };

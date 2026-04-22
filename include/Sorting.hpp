@@ -37,7 +37,6 @@ void quickSort(std::vector<Record>& arr){
     }
 }
 
-
 // MERGE SORT
 void merge(std::vector<Record>& arr, int left, int mid, int right){
     int n1 = mid - left + 1;
